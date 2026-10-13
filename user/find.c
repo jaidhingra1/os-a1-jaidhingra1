@@ -29,7 +29,8 @@ int isdot(char *name) {
 
 
 void find(char *path, char *pattern, int type) {
-  char buf[512], *p;
+  char *buf;
+  char *p;
   int fd;
   int show;
   struct dirent de;
@@ -49,7 +50,14 @@ void find(char *path, char *pattern, int type) {
     close(fd);
     return;
   }
-  if (strlen(path) + 1 + DIRSIZ + 1 > sizeof(buf)) {
+  buf = malloc(512);
+  if (buf == 0) {
+    fprintf(2, "find: out of memory\n");
+    close(fd);
+    exit(1);
+  }
+
+  if (strlen(path) + 1 + DIRSIZ + 1 > 512) {
     fprintf(2, "find: path too long\n");
     close(fd);
     exit(1);
@@ -97,6 +105,7 @@ void find(char *path, char *pattern, int type) {
   }
 
   close(fd);
+  free(buf);
 }
 
 int main(int argc, char *argv[]) {
