@@ -140,3 +140,13 @@ uint64 sys_sysinfo(void) {
 
   return 0;
 }
+
+uint64 sys_getprocs(void) {
+  uint64 addr;
+  int max;
+
+  argaddr(0, &addr);
+  argint(1, &max);
+
+  return getprocinfo(addr, max);
+}
